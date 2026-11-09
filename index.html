@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Body Organ Heroes – Year 3 Science</title>
+<style>
+:root{--bg:#fff7ec;--card:#ffffff;--ink:#2b2340;--muted:#6b6283;--pink:#ff5c8a;--blue:#3a8dff;--green:#2fb36b;--gold:#ffb703;--bad:#ff8a3d;--line:#e7dcf5;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d1830;--card:#2a2344;--ink:#f6f1ff;--muted:#b9afd6;--line:#44396b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1d1830;--card:#2a2344;--ink:#f6f1ff;--muted:#b9afd6;--line:#44396b;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Comic Sans MS","Chalkboard SE","Trebuchet MS",system-ui,sans-serif;min-height:100vh;display:flex;justify-content:center}
+#app{width:100%;max-width:640px;padding:16px;text-align:center}
+h1{font-size:2rem;margin:.3em 0}
+h2{font-size:1.5rem;margin:.3em 0}
+.big{font-size:5rem;line-height:1.1;margin:.1em 0}
+.sub{color:var(--muted);font-size:1.1rem;margin:.2em 0 1em}
+.stars{font-size:1.6rem;letter-spacing:2px;margin:.3em 0}
+.menu button,.opts button,.btn{font:inherit;cursor:pointer;border:0;border-radius:22px;color:#fff;font-weight:700;box-shadow:0 5px 0 rgba(0,0,0,.2);transition:transform .1s}
+.menu button:active,.opts button:active,.btn:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.2)}
+.menu button{display:flex;align-items:center;gap:14px;width:100%;margin:14px 0;padding:18px 20px;font-size:1.35rem;text-align:left}
+.menu .em{font-size:2.6rem}
+.menu small{display:block;font-weight:400;font-size:1rem;opacity:.95}
+.card{background:var(--card);border:3px solid var(--line);border-radius:26px;padding:18px;margin:12px 0}
+.q{font-size:1.45rem;font-weight:700;margin:.2em 0}
+.opts{display:grid;gap:12px;margin-top:14px}
+.opts button{background:var(--blue);padding:18px 12px;font-size:1.3rem;min-height:64px}
+.opts button.right{background:var(--green)}
+.opts button.wrong{background:var(--bad)}
+.opts button:disabled{cursor:default}
+.fb{font-size:1.3rem;font-weight:700;min-height:2.8em;margin:.8em 0 .2em}
+.btn{background:var(--pink);padding:14px 26px;font-size:1.3rem}
+.btn.alt{background:var(--muted)}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:1.1rem;font-weight:700}
+.bar{height:14px;background:var(--line);border-radius:10px;overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;background:var(--gold);transition:width .3s}
+.say{background:none;border:2px solid var(--line);border-radius:50%;width:46px;height:46px;font-size:1.4rem;cursor:pointer;color:var(--ink)}
+.hop{animation:hop .5s}
+@keyframes hop{30%{transform:translateY(-14px) scale(1.1)}60%{transform:translateY(0)}}
+.pulse{display:inline-block;animation:beat 1s infinite}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.2)}30%{transform:scale(1)}45%{transform:scale(1.15)}}
+.conf{position:fixed;top:-20px;font-size:1.8rem;animation:fall 2.4s linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.pulse,.hop,.conf{animation:none}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+var GAMES=[
+{id:"g1",title:"Inside or Outside?",sub:"Where is the organ?",em:"🔍",col:"#3a8dff",
+ intro:"An organ does a special job. Some organs are on the outside of your body. Some are inside!",
+ qs:[
+ {e:"👂",q:"Where are your ears?",a:"Outside (external)",o:["Inside (internal)","Outside (external)"],f:"The ears are external organs. Their job is hearing."},
+ {e:"❤️",q:"Where is your heart?",a:"Inside (internal)",o:["Inside (internal)","Outside (external)"],f:"The heart is an internal organ."},
+ {e:"🖐️",q:"Is your skin inside or outside?",a:"Outside (external)",o:["Inside (internal)","Outside (external)"],f:"The skin covers your body. It is an external organ."},
+ {e:"🧠",q:"Where is your brain?",a:"Inside (internal)",o:["Inside (internal)","Outside (external)"],f:"The brain is an internal organ."},
+ {e:"🫁",q:"Where are your lungs?",a:"Inside (internal)",o:["Inside (internal)","Outside (external)"],f:"The lungs are internal organs."},
+ {e:"📖",q:"Organs on the outside are called…",a:"external organs",o:["internal organs","external organs"],f:"External organs are on the outside. Internal organs are inside."}
+ ]},
+{id:"g2",title:"Organ Jobs",sub:"What does each organ do?",em:"🧩",col:"#9b5de5",
+ intro:"Every organ has a job. We call the job its function.",
+ qs:[
+ {e:"👂",q:"What is the job of your ears?",a:"Hearing",o:["Hearing","Seeing","Eating"],f:"Ears are for hearing!"},
+ {e:"🖐️",q:"What does your skin do?",a:"Protects your body",o:["Pumps blood","Protects your body","Hears sounds"],f:"Skin protects everything inside you."},
+ {e:"❤️",q:"What is the job of your heart?",a:"Pumps blood",o:["Pumps blood","Protects your body","Hearing"],f:"The heart transports blood around your body."},
+ {e:"✋",q:"Which organ helps you feel what you touch?",a:"Skin",o:["Ears","Heart","Skin"],f:"Skin helps you sense what you touch."},
+ {e:"🔊",q:"Which organ helps you hear a bell?",a:"Ears",o:["Ears","Skin","Heart"],f:"Your ears let you hear!"},
+ {e:"🩸",q:"Which organ moves blood around your body?",a:"Heart",o:["Heart","Ears","Skin"],f:"The heart pumps blood around your body."}
+ ]},
+{id:"g3",title:"Heart Hero",sub:"Big facts about the heart",em:"❤️",col:"#ff5c8a",
+ intro:"Your heart is a strong muscle. It works every minute of every day!",
+ qs:[
+ {e:"✊",q:"How big is your heart?",a:"About the size of your fist",o:["About the size of your fist","As big as a football","As small as a pea"],f:"Your heart is about the size of your fist."},
+ {e:"🫀",q:"Where is your heart?",a:"In your chest, a little to the left",o:["In your chest, a little to the left","In your tummy","In your head"],f:"It sits inside your chest, a little to the left of the centre."},
+ {e:"💪",q:"What kind of body part is the heart?",a:"A strong muscle",o:["A strong muscle","A bone","A tooth"],f:"Your heart is a strong muscle."},
+ {e:"🚰",q:"Blood is pumped through tubes called…",a:"Arteries",o:["Arteries","Straws","Ropes"],f:"The tubes are called arteries."},
+ {e:"🫁",q:"Blood goes to the lungs to pick up…",a:"Oxygen",o:["Oxygen","Juice","Sand"],f:"Blood picks up oxygen from the air you breathe in."},
+ {e:"🤚",q:"Where can you feel your pulse?",a:"Neck or wrist",o:["Neck or wrist","Knee or toe","Nose or ear"],f:"Press three fingers on the side of your neck or on your wrist. That is your pulse!"},
+ {e:"🔢",q:"How many organs are in the human body?",a:"78",o:["7","78","700"],f:"There are 78 organs in the human body!"}
+ ]}
+];
+var app=document.getElementById("app"),stars={g1:0,g2:0,g3:0},cur=null,idx=0,score=0,order=[];
+var AC=null;
+function tone(f,d){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();var o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;g.gain.value=.08;o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d)}catch(e){}}
+function say(t){try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.rate=.85;u.lang="en-GB";speechSynthesis.speak(u)}catch(e){}}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function confetti(){var s=["⭐","🎉","❤️","✨","🌟"];for(var i=0;i<22;i++){var c=document.createElement("div");c.className="conf";c.textContent=s[i%5];c.style.left=Math.random()*100+"vw";c.style.animationDelay=Math.random()*.8+"s";document.body.appendChild(c);setTimeout(function(x){x.remove()}.bind(null,c),3500)}}
+function starStr(n,max){var s="";for(var i=0;i<max;i++)s+=i<n?"⭐":"☆";return s}
+function total(){return stars.g1+stars.g2+stars.g3}
+
+function home(){
+ cur=null;
+ var h='<div class="big pulse">❤️</div><h1>Body Organ Heroes</h1><p class="sub">Tap a game to start!</p><div class="menu">';
+ GAMES.forEach(function(g){h+='<button style="background:'+g.col+'" onclick="start(\''+g.id+'\')"><span class="em">'+g.em+'</span><span>'+g.title+'<small>'+g.sub+' '+starStr(stars[g.id],3)+'</small></span></button>'});
+ h+='</div><p class="stars">'+total()+' / 9 ⭐</p><p class="sub">Year 3 Science · The human body</p>';
+ app.innerHTML=h;
+}
+function start(id){cur=GAMES.filter(function(g){return g.id===id})[0];idx=0;score=0;order=cur.qs;
+ app.innerHTML='<div class="big hop">'+cur.em+'</div><h1>'+cur.title+'</h1><div class="card"><p class="q">'+cur.intro+'</p><button class="say" aria-label="Read aloud" onclick="say(\''+cur.intro.replace(/'/g,"’")+'\')">🔊</button></div><button class="btn" onclick="ask()">Let’s go! ▶</button><p><button class="btn alt" onclick="home()">⬅ Back</button></p>';
+}
+function ask(){
+ var q=cur.qs[idx],pct=idx/cur.qs.length*100;
+ var h='<div class="top"><button class="say" aria-label="Home" onclick="home()">🏠</button><span>Question '+(idx+1)+' of '+cur.qs.length+'</span><span>⭐ '+score+'</span></div><div class="bar"><i style="width:'+pct+'%"></i></div>';
+ h+='<div class="card"><div class="big hop">'+q.e+'</div><p class="q">'+q.q+'</p><button class="say" aria-label="Read aloud" id="sp">🔊</button></div><div class="opts" id="opts">';
+ shuffle(q.o).forEach(function(o,i){h+='<button data-o="'+o.replace(/"/g,"&quot;")+'">'+o+'</button>'});
+ h+='</div><p class="fb" id="fb"></p><div id="nx"></div>';
+ app.innerHTML=h;
+ document.getElementById("sp").onclick=function(){say(q.q+" "+q.o.join(". Or. "))};
+ var bs=document.querySelectorAll("#opts button");
+ bs.forEach(function(b){b.onclick=function(){pick(b,bs,q)}});
+}
+function pick(b,bs,q){
+ var ok=b.getAttribute("data-o")===q.a;
+ bs.forEach(function(x){x.disabled=true;if(x.getAttribute("data-o")===q.a)x.classList.add("right")});
+ var fb=document.getElementById("fb");
+ if(ok){score++;tone(660,.15);setTimeout(function(){tone(880,.2)},150);fb.textContent="🎉 Great job! "+q.f}
+ else{b.classList.add("wrong");tone(220,.3);fb.textContent="Nice try! "+q.f}
+ var last=idx===cur.qs.length-1;
+ document.getElementById("nx").innerHTML='<button class="btn" onclick="'+(last?"finish()":"next()")+'">'+(last?"See my stars ⭐":"Next ▶")+'</button>';
+}
+function next(){idx++;ask()}
+function finish(){
+ var n=cur.qs.length,r=score/n,s=r>=.8?3:r>=.5?2:1;
+ if(s>stars[cur.id])stars[cur.id]=s;
+ if(s===3)confetti();
+ var msg=s===3?"Super scientist! 🏆":s===2?"Well done! 👏":"Good try! Play again to get more stars!";
+ app.innerHTML='<div class="big hop">'+(s===3?"🏆":"🌟")+'</div><h1>'+msg+'</h1><p class="stars">'+starStr(s,3)+'</p><p class="sub">You got '+score+' out of '+n+'!</p><button class="btn" onclick="start(\''+cur.id+'\')">Play again 🔁</button><p><button class="btn alt" onclick="home()">More games 🏠</button></p>';
+}
+home();
+</script>
+</body>
+</html>
